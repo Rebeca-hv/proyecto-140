@@ -1,4 +1,8 @@
-song = "";
+song1 = "";
+song2 = "";
+
+song1_status = "";
+song2_status = "";
 
 manoIzquierdaX = 0;
 manoIzquierdaY = 0;
@@ -10,7 +14,8 @@ puntajeManoDerecha = 0;
 puntajeManoIzquierda = 0;
 
 function preload(){
-    song = loadSound("sowk.mp3");
+    song1 = loadSound("sowk.mp3");
+    song2 = loadSound("lt.mp3");
 }
 
 function setup(){
@@ -30,7 +35,7 @@ function modelLoaded(){
 
 function gotPoses(results){
     if(results.length > 0){
-        console.log(results);
+        //console.log(results);
 
         puntajeManoDerecha = results[0].pose.keypoints[10].score;
         puntajeManoIzquierda = results[0].pose.keypoints[9].score;
@@ -48,41 +53,28 @@ function gotPoses(results){
 
 function draw(){
     image(video, 0, 0, 600, 500);
+
+    song1_status = song1.isPlaying();
+    song2_status = song2.isPlaying();
+
     fill("#FF0000");
     stroke("#FF0000");
 
     if(puntajeManoDerecha > 0.2){
         circle(manoDerechaX,manoDerechaY,20);
-
-    if(manoDerechaY > 0 && manoDerechaY <= 100){
-            document.getElementById("speed").innerHTML = "Velocidad = 0.5x";
-            song.rate(0.5);
+        song2.stop();
+        if(song1_status == false){
+            song1.play();
+            document.getElementById("song").innerHTML = "Reproduciendo cancion 1"
+        }
     }
-    else if(manoDerechaY > 100 && manoDerechaY <= 200){
-            document.getElementById("speed").innerHTML = "Velocidad = 1x";
-            song.rate(1);
-    }
-    else if(manoDerechaY > 200 && manoDerechaY <= 300){
-        document.getElementById("speed").innerHTML = "Velocidad = 1.5x";
-        song.rate(1.5);
-    }
-    else if(manoDerechaY > 300 && manoDerechaY <= 400){
-        document.getElementById("speed").innerHTML = "Velocidad = 2x";
-        song.rate(2);
-
-    }
-    else if(manoDerechaY > 400){
-        document.getElementById("speed").innerHTML = "Velocidad = 2.5x";
-        song.rate(2.5);
-    }
-    }
-    if(puntajeManoIzquierda < 0.2){
+    if(puntajeManoIzquierda > 0.2){
         circle(manoIzquierdaX,manoIzquierdaY,20);
-        InNumberLeftWrist = Number(manoIzquierdaY);
-        new_leftWrist =floor(InNumberLeftWrist *2);
-        volume = new_leftWrist/500;
-        document.getElementById("volume").innerHTML = "Volumen = "+ volume;
-        song.setVolume(volume);
+        song1.stop();
+        if(song2_status == false){
+            song2.play();
+            document.getElementById("song").innerHTML = "Reproduciendo cancion 2"
+        }
     }
 }
 
